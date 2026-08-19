@@ -1,0 +1,74 @@
+[
+  {
+    "id": "H001",
+    "name": "Unity Block",
+    "type": "Boys Hostel",
+    "totalRooms": 120,
+    "availableRooms": 18,
+    "totalBeds": 480,
+    "availableBeds": 72,
+    "feePerYear": 45000,
+    "facilities": ["WiFi", "Laundry", "Gym", "Common Room", "24/7 Security"],
+    "image": "hostel-unity",
+    "roomTypes": [
+      { "sharing": "4-sharing", "totalRooms": 40, "availableRooms": 8, "pricePerYear": 30000 },
+      { "sharing": "3-sharing", "totalRooms": 30, "availableRooms": 5, "pricePerYear": 36000 },
+      { "sharing": "2-sharing", "totalRooms": 30, "availableRooms": 3, "pricePerYear": 42000 },
+      { "sharing": "1-sharing", "totalRooms": 20, "availableRooms": 2, "pricePerYear": 50000 }
+    ]
+  },
+  {
+    "id": "H002",
+    "name": "Harmony Block",
+    "type": "Girls Hostel",
+    "totalRooms": 100,
+    "availableRooms": 12,
+    "totalBeds": 400,
+    "availableBeds": 48,
+    "feePerYear": 45000,
+    "facilities": ["WiFi", "Laundry", "Gym", "Common Room", "24/7 Security"],
+    "image": "hostel-harmony",
+    "roomTypes": [
+      { "sharing": "4-sharing", "totalRooms": 35, "availableRooms": 5, "pricePerYear": 30000 },
+      { "sharing": "3-sharing", "totalRooms": 25, "availableRooms": 4, "pricePerYear": 36000 },
+      { "sharing": "2-sharing", "totalRooms": 25, "availableRooms": 2, "pricePerYear": 42000 },
+      { "sharing": "1-sharing", "totalRooms": 15, "availableRooms": 1, "pricePerYear": 50000 }
+    ]
+  },
+  {
+    "id": "H003",
+    "name": "Victory Block",
+    "type": "Boys Hostel",
+    "totalRooms": 80,
+    "availableRooms": 25,
+    "totalBeds": 320,
+    "availableBeds": 100,
+    "feePerYear": 40000,
+    "facilities": ["WiFi", "Common Room", "24/7 Security"],
+    "image": "hostel-victory",
+    "roomTypes": [
+      { "sharing": "4-sharing", "totalRooms": 30, "availableRooms": 12, "pricePerYear": 26000 },
+      { "sharing": "3-sharing", "totalRooms": 20, "availableRooms": 7, "pricePerYear": 32000 },
+      { "sharing": "2-sharing", "totalRooms": 20, "availableRooms": 4, "pricePerYear": 38000 },
+      { "sharing": "1-sharing", "totalRooms": 10, "availableRooms": 2, "pricePerYear": 45000 }
+    ]
+  },
+  {
+    "id": "H004",
+    "name": "Serenity Block",
+    "type": "Girls Hostel",
+    "totalRooms": 60,
+    "availableRooms": 8,
+    "totalBeds": 240,
+    "availableBeds": 32,
+    "feePerYear": 42000,
+    "facilities": ["WiFi", "Laundry", "Common Room", "24/7 Security"],
+    "image": "hostel-serenity",
+    "roomTypes": [
+      { "sharing": "4-sharing", "totalRooms": 20, "availableRooms": 3, "pricePerYear": 28000 },
+      { "sharing": "3-sharing", "totalRooms": 15, "availableRooms": 2, "pricePerYear": 34000 },
+      { "sharing": "2-sharing", "totalRooms": 15, "availableRooms": 2, "pricePerYear": 40000 },
+      { "sharing": "1-sharing", "totalRooms": 10, "availableRooms": 1, "pricePerYear": 48000 }
+    ]
+  }
+]

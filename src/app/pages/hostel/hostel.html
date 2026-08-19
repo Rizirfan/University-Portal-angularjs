@@ -1,0 +1,264 @@
+<app-hero title="Campus Hostel & Accommodation Services" />
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+
+  <div class="flex gap-2 mb-8">
+    <button (click)="setTab('browse')"
+            class="px-6 py-2.5 rounded text-sm font-semibold transition-colors"
+            [class]="activeTab() === 'browse'
+              ? 'bg-accent text-white shadow-md'
+              : 'bg-white text-gray-600 border border-gray-200 hover:border-accent hover:text-accent'">
+      Browse Hostels
+    </button>
+    <button (click)="setTab('bookings')"
+            class="px-6 py-2.5 rounded text-sm font-semibold transition-colors relative"
+            [class]="activeTab() === 'bookings'
+              ? 'bg-accent text-white shadow-md'
+              : 'bg-white text-gray-600 border border-gray-200 hover:border-accent hover:text-accent'">
+      My Bookings
+      @if (bookings().length > 0) {
+        <span class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
+          {{ bookings().length }}
+        </span>
+      }
+    </button>
+  </div>
+
+  @if (activeTab() === 'browse') {
+    <app-section-title title="Hostel Blocks" subtitle="Select a room sharing type and book directly" />
+
+    <!-- PROFESSIONAL HOSTEL ROOM DIRECTORY LIST TABLE -->
+    <div class="space-y-6">
+      @for (hostel of hostels(); track hostel.id) {
+        <div class="bg-white rounded shadow-xs border border-gray-200 overflow-hidden">
+          <div class="p-5 bg-gray-50 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-xl font-extrabold text-gray-800">{{ hostel.name }}</h3>
+                <span class="text-xs font-bold px-2.5 py-0.5 rounded-full"
+                      [class]="hostel.type.includes('Boys') ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'">
+                  {{ hostel.type }}
+                </span>
+              </div>
+              <div class="flex flex-wrap gap-1.5 mt-1">
+                @for (facility of hostel.facilities; track facility) {
+                  <span class="text-[10px] font-semibold text-gray-500 bg-white border border-gray-200 px-2 py-0.5 rounded-md">
+                    {{ facility }}
+                  </span>
+                }
+              </div>
+            </div>
+
+            <div class="text-right">
+              <span class="text-xs text-gray-400 font-medium block">Occupancy</span>
+              <span class="text-sm font-bold text-gray-700">
+                {{ hostel.totalRooms - hostel.availableRooms }} / {{ hostel.totalRooms }} rooms booked
+              </span>
+            </div>
+          </div>
+
+          <!-- Rooms List Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-gray-100 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                  <th class="py-3 px-5">Sharing Type</th>
+                  <th class="py-3 px-5 text-center">Available Rooms</th>
+                  <th class="py-3 px-5 text-right">Annual Fee</th>
+                  <th class="py-3 px-5 text-right">Booking Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100 text-sm">
+                @for (room of hostel.roomTypes; track room.sharing) {
+                  <tr class="hover:bg-blue-50/30 transition-colors">
+                    <td class="py-3.5 px-5 font-bold text-gray-800">
+                      {{ room.sharing }}
+                    </td>
+                    <td class="py-3.5 px-5 text-center">
+                      <span class="text-xs font-bold px-2.5 py-1 rounded-full border inline-block" [class]="getAvailabilityClass(room.availableRooms)">
+                        {{ room.availableRooms === 0 ? 'Fully Booked' : room.availableRooms + ' Rooms Left' }}
+                      </span>
+                    </td>
+                    <td class="py-3.5 px-5 text-right font-extrabold text-accent text-base">
+                      &#8377;{{ room.pricePerYear | number }} <span class="text-xs text-gray-400 font-normal">/ yr</span>
+                    </td>
+                    <td class="py-3.5 px-5 text-right">
+                      <button (click)="openBooking(hostel, room)"
+                              [disabled]="room.availableRooms === 0"
+                              class="px-4 py-1.5 rounded text-xs font-bold transition-all shadow-xs inline-flex items-center gap-1"
+                              [class]="room.availableRooms === 0
+                                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                : 'bg-accent text-white hover:bg-accent/90 cursor-pointer'">
+                        {{ room.availableRooms === 0 ? 'No Vacancy' : 'Reserve Room' }}
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (activeTab() === 'bookings') {
+    @if (bookings().length === 0) {
+      <div class="text-center py-20">
+        <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+        </svg>
+        <h3 class="text-xl font-bold text-gray-400 mb-2">No Bookings Yet</h3>
+        <p class="text-gray-400 text-sm">Browse hostels and book a room to see your reservations here.</p>
+        <button (click)="setTab('browse')" class="mt-6 px-6 py-2.5 bg-accent text-white rounded text-sm font-semibold hover:bg-accent-light transition-colors">
+          Browse Hostels
+        </button>
+      </div>
+    } @else {
+      <app-section-title title="My Bookings" subtitle="All your hostel reservations" />
+
+      <div class="space-y-4">
+        @for (booking of bookings(); track booking.id) {
+          <div class="bg-white rounded shadow-md p-6 border border-gray-100">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded flex items-center justify-center shrink-0"
+                     [class]="booking.status === 'Confirmed' ? 'bg-emerald-100' : booking.status === 'Pending' ? 'bg-amber-100' : 'bg-red-100'">
+                  @if (booking.status === 'Confirmed') {
+                    <svg class="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  } @else if (booking.status === 'Pending') {
+                    <svg class="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  } @else {
+                    <svg class="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  }
+                </div>
+                <div>
+                  <h4 class="font-bold text-primary text-lg">{{ booking.hostelName }}</h4>
+                  <p class="text-accent text-sm font-medium">{{ booking.roomType }}</p>
+                  <div class="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-xs text-gray-400">
+                    <span>{{ booking.studentName }}</span>
+                    <span>{{ booking.registerNumber }}</span>
+                    <span>Booked: {{ booking.bookingDate }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 shrink-0">
+                <span class="px-3 py-1 rounded-full text-xs font-bold"
+                      [class]="booking.status === 'Confirmed' ? 'bg-emerald-100 text-emerald-700' : booking.status === 'Pending' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'">
+                  {{ booking.status }}
+                </span>
+                @if (booking.status !== 'Cancelled') {
+                  <button (click)="cancelBooking(booking.id)"
+                          class="px-4 py-2 text-xs font-semibold text-red-600 border border-red-200 rounded hover:bg-red-50 transition-colors">
+                    Cancel
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>
+
+@if (showModal()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4" (click)="closeModal()">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+
+    <div class="relative bg-white rounded shadow-2xl w-full max-w-md p-0 overflow-hidden" (click)="$event.stopPropagation()">
+      @if (!showSuccess()) {
+        <div class="bg-gradient-to-r from-primary to-accent p-6 text-white">
+          <h3 class="text-xl font-bold">Book Room</h3>
+          <p class="text-sm text-gray-200 mt-1">{{ selectedHostel()?.name }} &middot; {{ selectedRoom()?.sharing }}</p>
+        </div>
+
+        <div class="p-6">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Student Name</label>
+              <input type="text" [(ngModel)]="formName"
+                     placeholder="Enter your full name"
+                     class="w-full px-4 py-2.5 rounded border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Register Number</label>
+              <input type="text" [(ngModel)]="formRegNo"
+                     placeholder="e.g. REG2024001"
+                     class="w-full px-4 py-2.5 rounded border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+              <input type="email" [(ngModel)]="formEmail"
+                     placeholder="you@university.edu"
+                     class="w-full px-4 py-2.5 rounded border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Phone</label>
+              <input type="tel" [(ngModel)]="formPhone"
+                     placeholder="10-digit mobile number"
+                     class="w-full px-4 py-2.5 rounded border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all" />
+            </div>
+          </div>
+
+          @if (selectedRoom(); as room) {
+            <div class="mt-4 p-3 bg-surface rounded">
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-500">Annual Fee</span>
+                <span class="font-bold text-primary">&#8377;{{ room.pricePerYear | number }}</span>
+              </div>
+            </div>
+          }
+
+          <div class="flex gap-3 mt-6">
+            <button (click)="closeModal()"
+                    class="flex-1 py-2.5 rounded text-sm font-semibold text-gray-600 border border-gray-200 hover:bg-gray-50 transition-colors">
+              Cancel
+            </button>
+            <button (click)="submitBooking()"
+                    [disabled]="!isFormValid()"
+                    class="flex-1 py-2.5 rounded text-sm font-semibold text-white transition-colors"
+                    [class]="isFormValid() ? 'bg-accent hover:bg-accent-light cursor-pointer' : 'bg-gray-300 cursor-not-allowed'">
+              Confirm Booking
+            </button>
+          </div>
+        </div>
+      } @else {
+        <div class="p-8 text-center">
+          <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-primary mb-2">Booking Confirmed!</h3>
+          <p class="text-gray-500 text-sm mb-4">Your room has been successfully booked.</p>
+          <div class="bg-surface rounded p-4 mb-6 text-left space-y-2">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-400">Booking ID</span>
+              <span class="font-bold text-accent">{{ lastBookingId() }}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-400">Hostel</span>
+              <span class="font-semibold text-gray-700">{{ selectedHostel()?.name }}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-400">Room Type</span>
+              <span class="font-semibold text-gray-700">{{ selectedRoom()?.sharing }}</span>
+            </div>
+          </div>
+          <button (click)="closeModal()"
+                  class="w-full py-2.5 rounded text-sm font-semibold bg-accent text-white hover:bg-accent-light transition-colors">
+            Done
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+}

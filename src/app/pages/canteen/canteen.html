@@ -1,0 +1,428 @@
+<app-hero title="Campus Canteen & Online Dining Services" />
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 pb-16">
+  <!-- Tabs Header -->
+  <div class="flex border-b border-gray-200 mb-8">
+    <button (click)="setTab('menu')"
+            class="py-3 px-6 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2"
+            [class]="activeTab() === 'menu' ? 'border-accent text-accent' : 'border-transparent text-gray-500 hover:text-gray-700'">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+      </svg>
+      Food Menu
+    </button>
+    <button (click)="setTab('orders')"
+            class="py-3 px-6 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2"
+            [class]="activeTab() === 'orders' ? 'border-accent text-accent' : 'border-transparent text-gray-500 hover:text-gray-700'">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+      </svg>
+      My Orders
+      @if (myOrders().length > 0) {
+        <span class="ml-1 px-2 py-0.5 text-xs font-bold bg-accent/10 text-accent rounded-full">
+          {{ myOrders().length }}
+        </span>
+      }
+    </button>
+  </div>
+
+  <!-- FOOD MENU TAB -->
+  @if (activeTab() === 'menu') {
+    <!-- Search & Dietary Filters Bar -->
+    <div class="bg-white p-4 rounded shadow-sm border border-gray-100 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <!-- Search Input -->
+      <div class="relative w-full sm:w-80">
+        <svg class="w-4 h-4 text-gray-400 absolute left-3.5 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input type="text"
+               [ngModel]="searchQuery()"
+               (ngModelChange)="searchQuery.set($event)"
+               placeholder="Search food items..."
+               class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent bg-gray-50 focus:bg-white" />
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+        <button (click)="setDietaryFilter('all')"
+                class="px-4 py-1.5 rounded text-xs font-bold transition-all border shrink-0"
+                [class]="dietaryFilter() === 'all' ? 'bg-accent text-white border-accent shadow-xs' : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'">
+          All Items
+        </button>
+        <button (click)="setDietaryFilter('veg')"
+                class="px-4 py-1.5 rounded text-xs font-bold transition-all border shrink-0 flex items-center gap-1.5"
+                [class]="dietaryFilter() === 'veg' ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs' : 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 border border-emerald-700"></span>
+          Pure Veg
+        </button>
+        <button (click)="setDietaryFilter('nonveg')"
+                class="px-4 py-1.5 rounded text-xs font-bold transition-all border shrink-0 flex items-center gap-1.5"
+                [class]="dietaryFilter() === 'nonveg' ? 'bg-red-600 text-white border-red-600 shadow-xs' : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'">
+          <span class="w-2 h-2 rounded-full bg-red-500 border border-red-700"></span>
+          Non-Veg
+        </button>
+      </div>
+    </div>
+
+    <!-- Category Sections & Food Menu List Table -->
+    @for (category of filteredCategories(); track category.id) {
+      <div class="mb-8">
+        <app-section-title [title]="category.category" />
+
+        <div class="bg-white rounded shadow-xs border border-gray-200 overflow-hidden">
+          <div class="divide-y divide-gray-100">
+            @for (item of category.items; track item.id) {
+              <div class="p-4 sm:px-6 flex items-center justify-between gap-4 hover:bg-blue-50/30 transition-colors"
+                   [class.opacity-60]="!item.available">
+                <!-- Item info -->
+                <div class="flex items-center gap-3">
+                  <span class="w-4 h-4 rounded-xs border-2 flex items-center justify-center shrink-0"
+                        [class]="item.veg ? 'border-emerald-600' : 'border-red-600'">
+                    <span class="w-2 h-2 rounded-full" [class]="item.veg ? 'bg-emerald-600' : 'bg-red-600'"></span>
+                  </span>
+
+                  <div>
+                    <h4 class="font-bold text-gray-800 text-sm sm:text-base leading-snug">{{ item.name }}</h4>
+                    <span class="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                      {{ item.veg ? 'Pure Veg' : 'Non-Veg' }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Price & Action -->
+                <div class="flex items-center gap-4 shrink-0">
+                  <span class="text-base sm:text-lg font-extrabold text-accent">&#8377;{{ item.price }}</span>
+
+                  @if (!item.available) {
+                    <span class="text-[10px] font-extrabold text-red-600 bg-red-50 border border-red-200 px-3 py-1 rounded-full">
+                      Sold Out
+                    </span>
+                  } @else {
+                    @if (getItemQuantity(item.id) === 0) {
+                      <button (click)="addToCart(item)"
+                              class="px-4 py-1.5 bg-accent hover:bg-accent/90 text-white font-bold text-xs rounded transition-all shadow-xs flex items-center gap-1.5 cursor-pointer">
+                        <span class="text-sm font-extrabold">+</span>
+                        <span>ADD</span>
+                      </button>
+                    } @else {
+                      <div class="flex items-center bg-accent text-white rounded shadow-xs overflow-hidden border border-accent">
+                        <button (click)="removeFromCart(item.id)" title="Decrease Quantity"
+                                class="px-3 py-1.5 hover:bg-black/20 font-extrabold transition-colors text-base flex items-center justify-center cursor-pointer">&minus;</button>
+                        <span class="px-3 py-1.5 text-xs font-extrabold bg-white text-accent min-w-[28px] text-center shadow-inner">{{ getItemQuantity(item.id) }}</span>
+                        <button (click)="addToCart(item)" title="Increase Quantity"
+                                class="px-3 py-1.5 hover:bg-black/20 font-extrabold transition-colors text-base flex items-center justify-center cursor-pointer">+</button>
+                      </div>
+                    }
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- STICKY CART BAR (WHEN CART HAS ITEMS) -->
+    @if (canteenService.cartCount() > 0) {
+      <div class="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-1.5rem)] max-w-xl animate-in slide-in-from-bottom duration-300">
+        <div class="bg-gray-900 text-white p-3.5 sm:p-4 rounded shadow-2xl flex items-center justify-between border border-gray-700">
+          <div class="flex items-center gap-2.5 sm:gap-3">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 bg-accent rounded flex items-center justify-center font-bold text-white text-sm sm:text-base shadow-sm shrink-0">
+              {{ canteenService.cartCount() }}
+            </div>
+            <div>
+              <div class="text-[10px] sm:text-xs text-gray-400">Total Price</div>
+              <div class="text-base sm:text-lg font-extrabold text-emerald-400">&#8377;{{ canteenService.cartTotal() | number }}</div>
+            </div>
+          </div>
+
+          <button (click)="openCheckout()"
+                  class="px-4 sm:px-6 py-2 sm:py-2.5 bg-accent hover:bg-accent/90 text-white font-bold text-xs sm:text-sm rounded transition-all flex items-center gap-1.5 sm:gap-2 shadow-md shrink-0">
+            <span>Checkout</span>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    }
+  }
+
+  <!-- MY ORDERS TAB -->
+  @if (activeTab() === 'orders') {
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+      <app-section-title title="Order History & Receipts" subtitle="Track your placed food orders and order details" />
+      @if (myOrders().length > 0) {
+        <div class="flex items-center gap-2 shrink-0">
+          <button (click)="clearAllOrders()"
+                  class="px-3.5 py-2 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 font-bold text-xs rounded shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            Clear All Orders
+          </button>
+
+          <button (click)="downloadOrderHistory()"
+                  class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded shadow-xs transition-all flex items-center gap-2 shrink-0 cursor-pointer">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Download History (CSV)
+          </button>
+        </div>
+      }
+    </div>
+
+    @if (myOrders().length === 0) {
+      <div class="bg-white rounded shadow-sm border border-gray-100 p-12 text-center max-w-lg mx-auto">
+        <div class="w-16 h-16 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-gray-800 mb-1">No Canteen Orders Placed</h3>
+        <p class="text-gray-500 text-sm mb-6">You haven't ordered any delicious food yet today.</p>
+        <button (click)="setTab('menu')" class="px-5 py-2.5 bg-accent text-white font-bold text-sm rounded hover:bg-accent/90 transition-colors">
+          Browse Canteen Menu
+        </button>
+      </div>
+    } @else {
+      <div class="space-y-6">
+        @for (order of myOrders(); track order.id) {
+          <div class="bg-white rounded shadow-md border overflow-hidden transition-all"
+               [class.border-gray-100]="order.status !== 'Cancelled'"
+               [class.border-red-200]="order.status === 'Cancelled'"
+               [class.opacity-60]="order.status === 'Cancelled'">
+            
+            <!-- Order Header -->
+            <div class="px-6 py-4 bg-gray-50 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-mono font-extrabold text-accent text-base">{{ order.id }}</span>
+                  <span class="px-2.5 py-0.5 bg-gray-200 text-gray-700 text-xs font-semibold rounded-md">{{ order.orderType }}</span>
+                </div>
+                <div class="text-xs text-gray-400 mt-0.5">Ordered at {{ order.orderTime }}</div>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <span class="px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wide"
+                      [class]="order.status === 'Preparing' ? 'bg-amber-100 text-amber-800 border border-amber-300' : 
+                               order.status === 'Ready for Pickup' ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' :
+                               order.status === 'Completed' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'">
+                  {{ order.status }}
+                </span>
+
+                @if (order.status === 'Preparing') {
+                  <button (click)="cancelOrder(order.id)" class="text-xs text-red-600 hover:text-red-800 font-bold underline cursor-pointer">
+                    Cancel Order
+                  </button>
+                }
+
+                <button (click)="deleteOrder(order.id)" title="Remove order record"
+                        class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Order Details -->
+            <div class="p-6">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Items list -->
+                <div class="md:col-span-2 space-y-2">
+                  <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Itemized Receipt</div>
+                  @for (item of order.items; track item.itemId) {
+                    <div class="flex justify-between items-center text-sm py-1 border-b border-gray-50">
+                      <div class="flex items-center gap-2">
+                        <span class="font-bold text-accent text-xs">{{ item.quantity }}x</span>
+                        <span class="font-semibold text-gray-800">{{ item.name }}</span>
+                      </div>
+                      <span class="font-mono font-bold text-gray-700">&#8377;{{ item.price * item.quantity }}</span>
+                    </div>
+                  }
+                </div>
+
+                <!-- Customer & Payment Summary -->
+                <div class="bg-gray-50 p-4 rounded space-y-2 text-xs border border-gray-100">
+                  <div class="flex justify-between">
+                    <span class="text-gray-400">Student:</span>
+                    <span class="font-bold text-gray-800">{{ order.studentName }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-400">Reg No:</span>
+                    <span class="font-bold text-gray-800 font-mono">{{ order.registerNumber }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-400">Payment:</span>
+                    <span class="font-bold text-gray-800">{{ order.paymentMethod }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-400">Est. Ready:</span>
+                    <span class="font-bold text-emerald-600">{{ order.estimatedTime }}</span>
+                  </div>
+
+                  <div class="pt-3 border-t border-gray-200 flex justify-between items-center text-sm">
+                    <span class="font-bold text-gray-700">Total Paid</span>
+                    <span class="font-extrabold text-accent text-lg">&#8377;{{ order.totalAmount }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        }
+      </div>
+    }
+  }
+</div>
+
+<!-- CHECKOUT MODAL -->
+@if (showCheckoutModal()) {
+  <div class="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div class="bg-white rounded shadow-2xl max-w-lg w-full overflow-hidden border border-gray-100 animate-in fade-in zoom-in duration-200">
+      
+      @if (!showOrderSuccessModal()) {
+        <!-- Header -->
+        <div class="bg-accent text-white p-6 flex items-center justify-between">
+          <div>
+            <h3 class="text-xl font-bold">Canteen Order Checkout</h3>
+            <p class="text-xs text-blue-100">{{ canteenService.cartCount() }} items in cart</p>
+          </div>
+          <button (click)="closeCheckout()" class="text-white/80 hover:text-white text-2xl font-bold">&times;</button>
+        </div>
+
+        <!-- Body -->
+        <div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+          <!-- Cart Items Summary -->
+          <div>
+            <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Order Items</div>
+            <div class="bg-gray-50 p-3 rounded space-y-2 border border-gray-100 max-h-36 overflow-y-auto">
+              @for (ci of canteenService.cartItems(); track ci.foodItem.id) {
+                <div class="flex justify-between items-center text-xs font-medium">
+                  <div class="flex items-center gap-2">
+                    <span class="w-5 h-5 bg-accent/10 text-accent rounded-full font-bold flex items-center justify-center text-[10px]">
+                      {{ ci.quantity }}
+                    </span>
+                    <span class="text-gray-800 font-semibold">{{ ci.foodItem.name }}</span>
+                  </div>
+                  <span class="font-bold text-gray-700">&#8377;{{ ci.foodItem.price * ci.quantity }}</span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Customer details -->
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Student Name *</label>
+            <input type="text" [(ngModel)]="formName" placeholder="e.g. Alex Johnson"
+                   class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Register No *</label>
+              <input type="text" [(ngModel)]="formRegNo" placeholder="e.g. 2024CS101"
+                     class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Phone Number *</label>
+              <input type="tel" [(ngModel)]="formPhone" placeholder="e.g. 9876543210"
+                     class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent" />
+            </div>
+          </div>
+
+          <!-- Dining Option -->
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Dining / Order Type</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button type="button" (click)="orderType = 'Takeaway'"
+                      class="py-2 px-2 border text-xs font-bold rounded transition-all text-center"
+                      [class]="orderType === 'Takeaway' ? 'border-accent bg-accent/10 text-accent ring-2 ring-accent' : 'border-gray-200 text-gray-700 hover:bg-gray-50'">
+                Takeaway
+              </button>
+              <button type="button" (click)="orderType = 'Dine-In'"
+                      class="py-2 px-2 border text-xs font-bold rounded transition-all text-center"
+                      [class]="orderType === 'Dine-In' ? 'border-accent bg-accent/10 text-accent ring-2 ring-accent' : 'border-gray-200 text-gray-700 hover:bg-gray-50'">
+                Dine-In
+              </button>
+              <button type="button" (click)="orderType = 'Hostel Delivery'"
+                      class="py-2 px-2 border text-xs font-bold rounded transition-all text-center"
+                      [class]="orderType === 'Hostel Delivery' ? 'border-accent bg-accent/10 text-accent ring-2 ring-accent' : 'border-gray-200 text-gray-700 hover:bg-gray-50'">
+                Hostel Delivery
+              </button>
+            </div>
+          </div>
+
+          <!-- Payment Method -->
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Payment Method</label>
+            <select [(ngModel)]="paymentMethod"
+                    class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent bg-white">
+              <option value="UPI">UPI / GPay / PhonePe</option>
+              <option value="Campus Card">University Campus Card</option>
+              <option value="Cash on Delivery">Cash at Counter</option>
+            </select>
+          </div>
+
+          <!-- Total Bill -->
+          <div class="bg-gray-50 p-4 rounded border border-gray-200 flex justify-between items-center">
+            <span class="text-xs text-gray-500 font-medium">Grand Total</span>
+            <span class="text-2xl font-extrabold text-accent">&#8377;{{ canteenService.cartTotal() }}</span>
+          </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="p-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
+          <button (click)="closeCheckout()" class="px-4 py-2 border border-gray-300 text-gray-700 font-semibold text-sm rounded hover:bg-gray-100 transition-colors">
+            Cancel
+          </button>
+          <button (click)="submitOrder()"
+                  [disabled]="!isFormValid()"
+                  class="px-6 py-2 bg-accent hover:bg-accent/90 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold text-sm rounded transition-colors">
+            Place Order
+          </button>
+        </div>
+
+      } @else {
+        <!-- Order Success State -->
+        <div class="p-8 text-center">
+          <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+
+          <h3 class="text-2xl font-extrabold text-gray-800 mb-1">Order Received!</h3>
+          <p class="text-gray-500 text-sm mb-6">Your order has been sent to the canteen kitchen.</p>
+
+          <div class="bg-gray-50 p-4 rounded border border-gray-200 text-left mb-6 text-sm space-y-2">
+            <div class="flex justify-between">
+              <span class="text-gray-500">Order Token ID:</span>
+              <span class="font-mono font-bold text-accent">{{ lastOrder()?.id }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Order Type:</span>
+              <span class="font-bold text-gray-800">{{ lastOrder()?.orderType }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Estimated Ready Time:</span>
+              <span class="font-bold text-emerald-600">{{ lastOrder()?.estimatedTime }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Amount Paid:</span>
+              <span class="font-bold text-gray-800">&#8377;{{ lastOrder()?.totalAmount }}</span>
+            </div>
+          </div>
+
+          <button (click)="closeCheckout(); setTab('orders')"
+                  class="w-full py-3 bg-accent text-white font-extrabold text-sm rounded hover:bg-accent/90 transition-colors shadow-md">
+            Done & View Order History
+          </button>
+        </div>
+      }
+
+    </div>
+  </div>
+}

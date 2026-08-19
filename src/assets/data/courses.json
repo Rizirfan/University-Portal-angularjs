@@ -1,0 +1,134 @@
+[
+  {
+    "id": "BSC-CS",
+    "name": "B.Sc Computer Science",
+    "type": "UG",
+    "degreeType": "B.Sc",
+    "totalSemesters": 6,
+    "duration": "3 Years (6 Semesters)",
+    "department": "School of Computer Science",
+    "eligibility": "10+2 with Mathematics / Computer Science",
+    "fees": 75000,
+    "seats": 60,
+    "description": "Comprehensive program covering software development, database systems, web technologies, and artificial intelligence.",
+    "curriculum": [
+      { "semester": 1, "subjects": ["Programming in C", "Digital Computer Fundamentals", "Applied Mathematics I", "Technical English"] },
+      { "semester": 2, "subjects": ["Data Structures & Algorithms", "Database Systems", "Computer Networks", "Discrete Mathematics"] },
+      { "semester": 3, "subjects": ["Java Programming", "Operating Systems", "Software Engineering", "Python Data Analysis"] },
+      { "semester": 4, "subjects": ["Web Development", "Cloud Computing", "Mobile Application Dev", "Probability & Statistics"] },
+      { "semester": 5, "subjects": ["Machine Learning", "Cyber Security", "Artificial Intelligence", "Mini Project"] },
+      { "semester": 6, "subjects": ["Deep Learning", "DevOps & Cloud Microservices", "Software Testing", "Major Capstone Project"] }
+    ]
+  },
+  {
+    "id": "BSC-BIO",
+    "name": "B.Sc Biotechnology",
+    "type": "UG",
+    "degreeType": "B.Sc",
+    "totalSemesters": 6,
+    "duration": "3 Years (6 Semesters)",
+    "department": "School of Life Sciences",
+    "eligibility": "10+2 with Biology & Chemistry",
+    "fees": 85000,
+    "seats": 45,
+    "description": "Focuses on cell biology, genetics, microbiology, molecular biology, recombinant DNA technology, and bioinformatics.",
+    "curriculum": [
+      { "semester": 1, "subjects": ["Cell Biology", "General Chemistry", "Biophysics", "English Communication"] },
+      { "semester": 2, "subjects": ["Microbiology", "Biochemistry", "Plant Biotechnology", "Biostatistics"] },
+      { "semester": 3, "subjects": ["Genetics", "Molecular Biology", "Animal Biotechnology", "Analytical Techniques"] },
+      { "semester": 4, "subjects": ["Recombinant DNA Technology", "Immunology", "Industrial Biotechnology", "Bioenergetics"] },
+      { "semester": 5, "subjects": ["Bioinformatics", "Environmental Biotech", "Genomics & Proteomics", "Lab Project"] },
+      { "semester": 6, "subjects": ["Stem Cell Technology", "Bioprocess Engineering", "IPR & Bioethics", "Major Research Dissertation"] }
+    ]
+  },
+  {
+    "id": "BSC-MATH",
+    "name": "B.Sc Mathematics",
+    "type": "UG",
+    "degreeType": "B.Sc",
+    "totalSemesters": 6,
+    "duration": "3 Years (6 Semesters)",
+    "department": "School of Mathematical Sciences",
+    "eligibility": "10+2 with Higher Mathematics",
+    "fees": 60000,
+    "seats": 50,
+    "description": "Rigorous foundation in calculus, linear algebra, abstract algebra, differential equations, and computational statistics.",
+    "curriculum": [
+      { "semester": 1, "subjects": ["Calculus & Analytical Geometry", "Algebra & Trigonometry", "Mathematical Physics", "English"] },
+      { "semester": 2, "subjects": ["Differential Equations", "Vector Calculus", "Numerical Methods", "Mathematical Statistics"] },
+      { "semester": 3, "subjects": ["Real Analysis I", "Linear Algebra", "Mechanics", "Programming in C++"] },
+      { "semester": 4, "subjects": ["Abstract Algebra", "Complex Analysis", "Discrete Mathematics", "Operations Research"] },
+      { "semester": 5, "subjects": ["Real Analysis II", "Topology", "Number Theory", "Statistical Quality Control"] },
+      { "semester": 6, "subjects": ["Differential Geometry", "Fluid Dynamics", "Mathematical Modeling", "Project & Viva"] }
+    ]
+  },
+  {
+    "id": "BTECH-CSE",
+    "name": "B.Tech Computer Science & Engineering",
+    "type": "UG",
+    "degreeType": "B.Tech",
+    "totalSemesters": 8,
+    "duration": "4 Years (8 Semesters)",
+    "department": "Department of Computer Engineering",
+    "eligibility": "10+2 with Physics, Chemistry & Mathematics (PCM)",
+    "fees": 120000,
+    "seats": 120,
+    "description": "Premier engineering degree covering computer architecture, algorithms, systems engineering, AI, and cloud technology.",
+    "curriculum": [
+      { "semester": 1, "subjects": ["Engineering Mathematics I", "Engineering Physics", "Python Programming", "Engineering Graphics"] },
+      { "semester": 2, "subjects": ["Engineering Mathematics II", "Data Structures in C++", "Basic Electrical Eng", "Environmental Science"] },
+      { "semester": 3, "subjects": ["Discrete Structures", "Object Oriented Design", "Computer Architecture", "Database Management"] },
+      { "semester": 4, "subjects": ["Operating Systems", "Algorithm Design & Analysis", "Computer Networks", "Theory of Computation"] },
+      { "semester": 5, "subjects": ["Compiler Design", "Web Technology & Microservices", "Software Engineering", "Artificial Intelligence"] },
+      { "semester": 6, "subjects": ["Machine Learning", "Cryptography & Security", "Mobile Computing", "Elective I"] },
+      { "semester": 7, "subjects": ["Cloud & Distributed Systems", "Big Data Analytics", "IoT Systems", "Industrial Internship"] },
+      { "semester": 8, "subjects": ["Blockchain & Smart Contracts", "Elective II", "Major Capstone Project Phase II"] }
+    ]
+  },
+  {
+    "id": "BTECH-ECE",
+    "name": "B.Tech Electronics & Communication Engineering",
+    "type": "UG",
+    "degreeType": "B.Tech",
+    "totalSemesters": 8,
+    "duration": "4 Years (8 Semesters)",
+    "department": "Department of Electronics",
+    "eligibility": "10+2 with Physics, Chemistry & Mathematics (PCM)",
+    "fees": 115000,
+    "seats": 90,
+    "description": "Advanced training in electronic circuit design, microprocessors, signal processing, VLSI design, and wireless communications.",
+    "curriculum": [
+      { "semester": 1, "subjects": ["Engineering Mathematics I", "Engineering Physics", "C Programming", "Engineering Graphics"] },
+      { "semester": 2, "subjects": ["Engineering Mathematics II", "Circuit Theory", "Basic Electronics", "Engineering Chemistry"] },
+      { "semester": 3, "subjects": ["Electronic Circuits", "Signals & Systems", "Digital Electronics", "Electromagnetic Fields"] },
+      { "semester": 4, "subjects": ["Analog Communication", "Microprocessors & Microcontrollers", "Linear Integrated Circuits", "Control Systems"] },
+      { "semester": 5, "subjects": ["Digital Communication", "Digital Signal Processing", "Transmission Lines & Waveguides", "Antenna Engineering"] },
+      { "semester": 6, "subjects": ["VLSI Design", "Wireless Communication", "Embedded Systems", "Optical Communication"] },
+      { "semester": 7, "subjects": ["RF & Microwave Engineering", "Adhoc & Sensor Networks", "Biomedical Electronics", "Industrial Internship"] },
+      { "semester": 8, "subjects": ["Satellite Communication", "Elective II", "Major Design Project"] }
+    ]
+  },
+  {
+    "id": "BTECH-MECH",
+    "name": "B.Tech Mechanical Engineering",
+    "type": "UG",
+    "degreeType": "B.Tech",
+    "totalSemesters": 8,
+    "duration": "4 Years (8 Semesters)",
+    "department": "Department of Mechanical Engineering",
+    "eligibility": "10+2 with Physics, Chemistry & Mathematics (PCM)",
+    "fees": 110000,
+    "seats": 60,
+    "description": "Covers thermodynamics, fluid mechanics, machine design, CAD/CAM, manufacturing automation, and robotics.",
+    "curriculum": [
+      { "semester": 1, "subjects": ["Engineering Mathematics I", "Engineering Chemistry", "Engineering Physics", "Engineering Workshop"] },
+      { "semester": 2, "subjects": ["Engineering Mathematics II", "Engineering Mechanics", "Basic Electrical & Electronics", "Engineering Graphics"] },
+      { "semester": 3, "subjects": ["Engineering Thermodynamics", "Strength of Materials", "Manufacturing Technology I", "Fluid Mechanics"] },
+      { "semester": 4, "subjects": ["Thermal Engineering", "Kinematics of Machinery", "Manufacturing Technology II", "Applied Hydraulics"] },
+      { "semester": 5, "subjects": ["Design of Machine Elements", "Dynamics of Machinery", "Metrology & Measurements", "Automobile Engineering"] },
+      { "semester": 6, "subjects": ["Heat & Mass Transfer", "Design of Transmission Systems", "CAD / CAM", "Finite Element Analysis"] },
+      { "semester": 7, "subjects": ["Mechatronics & Robotics", "Power Plant Engineering", "Total Quality Management", "Industrial Internship"] },
+      { "semester": 8, "subjects": ["Renewable Energy Sources", "Unconventional Machining", "Major Project"] }
+    ]
+  }
+]

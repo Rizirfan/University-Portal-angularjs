@@ -1,0 +1,401 @@
+<app-hero title="Student Profile & Digital ID Portal" />
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-6">
+
+  <!-- LOGIN / REGISTRATION INTERFACE (IF NOT LOGGED IN OR EDITING) -->
+  @if (!studentProfile() || isEditing()) {
+    <div class="bg-white rounded shadow-xl border border-gray-100 p-8 max-w-3xl mx-auto">
+      <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
+        <div>
+          <h3 class="text-2xl font-extrabold text-gray-800 flex items-center gap-2">
+            <svg class="w-7 h-7 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            {{ studentProfile() ? 'Edit Student Profile' : 'Student Access Portal' }}
+          </h3>
+          <p class="text-xs text-gray-500 mt-1">Log in using student Register Number (RRN) or register a new student profile</p>
+        </div>
+
+        @if (studentProfile()) {
+          <button (click)="toggleEdit()" class="text-xs font-bold text-gray-500 hover:text-gray-700 underline">
+            Cancel Edit
+          </button>
+        }
+      </div>
+
+      @if (!studentProfile()) {
+        <!-- Mode Tabs -->
+        <div class="flex border-b border-gray-200 mb-6 overflow-x-auto pb-1 gap-2">
+          <button (click)="setLoginMode('existing')"
+                  class="py-2.5 px-5 text-sm font-bold border-b-2 transition-all shrink-0"
+                  [class]="loginMode() === 'existing' ? 'border-accent text-accent' : 'border-transparent text-gray-500 hover:text-gray-700'">
+            Student RRN Login & Directory
+          </button>
+          <button (click)="setLoginMode('new')"
+                  class="py-2.5 px-5 text-sm font-bold border-b-2 transition-all shrink-0"
+                  [class]="loginMode() === 'new' ? 'border-accent text-accent' : 'border-transparent text-gray-500 hover:text-gray-700'">
+            Register New Student Profile
+          </button>
+        </div>
+      }
+
+      <!-- TAB 1: RRN LOGIN & SAMPLE STUDENT DIRECTORY -->
+      @if (loginMode() === 'existing' && !studentProfile()) {
+        <div class="space-y-6">
+          <!-- RRN Input Form -->
+          <div class="bg-gray-50 p-5 rounded border border-gray-200">
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Log In with RRN / Register Number</label>
+            <div class="flex flex-col sm:flex-row gap-2">
+              <input type="text" [(ngModel)]="loginRrn" placeholder="e.g. 2024CS101, 2024BIO101, 2024CSE101"
+                     class="flex-1 px-4 py-2.5 border border-gray-300 rounded text-sm font-mono focus:outline-none focus:ring-2 focus:ring-accent bg-white" />
+              <button (click)="loginWithRrn()"
+                      class="px-6 py-2.5 bg-accent hover:bg-accent/90 text-white font-extrabold text-sm rounded transition-all shadow-sm shrink-0">
+                Log In
+              </button>
+            </div>
+            @if (loginError()) {
+              <div class="text-xs text-red-600 font-semibold mt-2">{{ loginError() }}</div>
+            }
+          </div>
+
+          <!-- Sample Student Directory -->
+          <div>
+            <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Or Select a Student Profile to Log In Instantly</div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              @for (sample of studentService.sampleStudents; track sample.rrn) {
+                <div (click)="selectSampleStudent(sample)"
+                     class="bg-white p-4 rounded border border-gray-200 hover:border-accent hover:shadow-md cursor-pointer transition-all flex items-center gap-3 group">
+                  <div class="w-11 h-11 bg-accent/10 text-accent font-extrabold text-sm rounded flex items-center justify-center shrink-0 group-hover:bg-accent group-hover:text-white transition-colors">
+                    {{ sample.name.charAt(0) }}
+                  </div>
+                  <div>
+                    <div class="font-bold text-gray-800 text-sm leading-tight">{{ sample.name }}</div>
+                    <div class="text-xs font-mono font-semibold text-accent mt-0.5">RRN: {{ sample.rrn }}</div>
+                    <div class="text-[11px] text-gray-500 font-medium">{{ sample.department }} &bull; Sem {{ sample.semester }}</div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- TAB 2 / EDIT: REGISTRATION & EDIT FORM -->
+      @if (loginMode() === 'new' || isEditing()) {
+        <div class="space-y-4">
+          <!-- Personal Info -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Student Full Name *</label>
+              <input type="text" [(ngModel)]="formName" placeholder="e.g. Alex Johnson"
+                     class="w-full px-3.5 py-2.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">RRN / Register Number *</label>
+              <input type="text" [(ngModel)]="formRrn" placeholder="e.g. 2024CS101"
+                     class="w-full px-3.5 py-2.5 border border-gray-300 rounded text-sm font-mono focus:outline-none focus:ring-2 focus:ring-accent" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Date of Birth (DOB) *</label>
+              <input type="date" [(ngModel)]="formDob"
+                     class="w-full px-3.5 py-2.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent bg-white" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Degree Program *</label>
+              <select [(ngModel)]="formDegreeType" (change)="onDegreeChange()"
+                      class="w-full px-3.5 py-2.5 border border-gray-300 rounded text-sm font-bold focus:outline-none focus:ring-2 focus:ring-accent bg-white">
+                <option value="B.Sc">B.Sc (6 Semesters)</option>
+                <option value="B.Tech">B.Tech / Eng (8 Semesters)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Current Semester</label>
+              <select [(ngModel)]="formSemester"
+                      class="w-full px-3.5 py-2.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent bg-white">
+                @for (sem of [1,2,3,4,5,6,7,8]; track sem) {
+                  @if (formDegreeType === 'B.Sc' ? sem <= 6 : true) {
+                    <option [value]="sem">Semester {{ sem }}</option>
+                  }
+                }
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Department / Branch *</label>
+            <select [(ngModel)]="formDepartment"
+                    class="w-full px-3.5 py-2.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent bg-white">
+              @if (formDegreeType === 'B.Sc') {
+                @for (dept of bscDepartments; track dept) {
+                  <option [value]="dept">{{ dept }}</option>
+                }
+              } @else {
+                @for (dept of btechDepartments; track dept) {
+                  <option [value]="dept">{{ dept }}</option>
+                }
+              }
+            </select>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Email Address *</label>
+              <input type="email" [(ngModel)]="formEmail" placeholder="e.g. alex@student.edu"
+                     class="w-full px-3.5 py-2.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Mobile Phone *</label>
+              <input type="tel" [(ngModel)]="formPhone" placeholder="e.g. +91 9876543210"
+                     class="w-full px-3.5 py-2.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Blood Group</label>
+              <select [(ngModel)]="formBloodGroup"
+                      class="w-full px-3.5 py-2.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent bg-white">
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Emergency Contact Phone</label>
+              <input type="tel" [(ngModel)]="formEmergency" placeholder="Guardian phone number"
+                     class="w-full px-3.5 py-2.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Residential Address</label>
+              <input type="text" [(ngModel)]="formAddress" placeholder="Street address, city"
+                     class="w-full px-3.5 py-2.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent" />
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-gray-100 flex justify-end gap-3">
+            <button (click)="saveProfile()"
+                    class="w-full sm:w-auto px-8 py-3 bg-accent hover:bg-accent/90 text-white font-extrabold text-sm rounded transition-all shadow-md flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Save Profile & Access Portal
+            </button>
+          </div>
+        </div>
+      }
+
+    </div>
+  }
+
+  <!-- DISPLAY LOGGED IN STUDENT PROFILE DASHBOARD -->
+  @if (studentProfile() && !isEditing()) {
+    @if (studentProfile(); as p) {
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        
+        <!-- DIGITAL STUDENT ID CARD WITH DARK BLUE GRADIENT -->
+        <div class="bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 text-white rounded p-6 shadow-2xl relative overflow-hidden border border-white/10">
+          <div class="flex justify-between items-start mb-6">
+            <div>
+              <div class="text-[10px] uppercase font-bold tracking-widest text-blue-200">University Campus ID</div>
+              <div class="font-mono text-xs font-bold text-white">{{ p.id }}</div>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-emerald-500/20 text-emerald-100 border border-emerald-300/30">
+              {{ p.academicStatus || 'Active' }}
+            </span>
+          </div>
+
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-20 h-20 bg-white text-slate-900 font-extrabold text-3xl rounded flex items-center justify-center shadow-lg border-2 border-white/30">
+              {{ p.name.charAt(0) }}
+            </div>
+            <div>
+              <h2 class="text-2xl font-extrabold leading-tight">{{ p.name }}</h2>
+              <div class="text-sm font-mono text-emerald-300 font-bold mt-0.5">RRN: {{ p.rrn }}</div>
+              <div class="text-xs text-blue-200 font-medium mt-1">{{ p.department }}</div>
+            </div>
+          </div>
+
+          <div class="bg-white/10 backdrop-blur-md rounded p-4 space-y-2 text-xs border border-white/10 mb-6">
+            <div class="flex justify-between">
+              <span class="text-blue-200">Program Degree:</span>
+              <span class="font-bold text-white">{{ p.degreeType }} ({{ p.totalSemesters }} Sems)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-blue-200">Current Semester:</span>
+              <span class="font-bold text-emerald-300">Semester {{ p.semester }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-blue-200">Date of Birth:</span>
+              <span class="font-bold text-white">{{ p.dob }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-blue-200">Blood Group:</span>
+              <span class="font-bold text-red-200">{{ p.bloodGroup || 'O+' }}</span>
+            </div>
+          </div>
+
+          <!-- DIGITAL STUDENT ID QR CARD -->
+          <div (click)="openQrModal()"
+               class="bg-white text-gray-900 p-3 rounded flex items-center justify-between cursor-pointer hover:shadow-lg transition-all group">
+            <div class="flex items-center gap-3">
+              <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=UNIVERSITY-STUDENT|' + p.id + '|' + p.rrn + '|' + p.name"
+                   alt="Student QR Code"
+                   class="w-12 h-12 rounded border border-gray-200 shrink-0" />
+              <div>
+                <div class="text-xs font-bold text-gray-900 group-hover:text-accent transition-colors">Campus ID Pass QR</div>
+                <div class="text-[10px] text-gray-500">Tap to expand full screen</div>
+              </div>
+            </div>
+
+            <span class="px-3 py-1 bg-slate-900 text-white font-extrabold text-[10px] rounded shadow-xs group-hover:bg-slate-800 transition-colors">
+              Full View
+            </span>
+          </div>
+        </div>
+
+        <!-- COMPLETE DETAILS & QUICK PORTAL ACCESS -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Profile Information Card -->
+          <div class="bg-white rounded shadow-md border border-gray-100 p-6">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+              <app-section-title title="Personal & Academic Records" subtitle="Verified student registration details" />
+              <div class="flex items-center gap-2">
+                <button (click)="toggleEdit()" class="px-3.5 py-1.5 bg-accent/10 text-accent font-bold text-xs rounded hover:bg-accent hover:text-white transition-colors">
+                  Edit Details
+                </button>
+                <button (click)="logout()" class="px-3.5 py-1.5 border border-red-200 text-red-600 font-bold text-xs rounded hover:bg-red-50 transition-colors">
+                  Switch Student
+                </button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
+              <div class="space-y-3">
+                <div>
+                  <span class="text-xs text-gray-400 font-medium block">Full Name</span>
+                  <span class="font-bold text-gray-800 text-base">{{ p.name }}</span>
+                </div>
+                <div>
+                  <span class="text-xs text-gray-400 font-medium block">Register Number (RRN)</span>
+                  <span class="font-mono font-bold text-accent text-base">{{ p.rrn }}</span>
+                </div>
+                <div>
+                  <span class="text-xs text-gray-400 font-medium block">Date of Birth (DOB)</span>
+                  <span class="font-bold text-gray-800">{{ p.dob }}</span>
+                </div>
+                <div>
+                  <span class="text-xs text-gray-400 font-medium block">Email Address</span>
+                  <span class="font-semibold text-gray-800">{{ p.email }}</span>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <div>
+                  <span class="text-xs text-gray-400 font-medium block">Degree & Department</span>
+                  <span class="font-bold text-gray-800">{{ p.department }} ({{ p.degreeType }})</span>
+                </div>
+                <div>
+                  <span class="text-xs text-gray-400 font-medium block">Academic Semester</span>
+                  <span class="font-bold text-emerald-600">Semester {{ p.semester }} of {{ p.totalSemesters }}</span>
+                </div>
+                <div>
+                  <span class="text-xs text-gray-400 font-medium block">Mobile Phone</span>
+                  <span class="font-bold text-gray-800">{{ p.phone }}</span>
+                </div>
+                <div>
+                  <span class="text-xs text-gray-400 font-medium block">Emergency Contact</span>
+                  <span class="font-bold text-gray-800">{{ p.emergencyContact || 'Not provided' }}</span>
+                </div>
+              </div>
+
+              <div class="sm:col-span-2 pt-3 border-t border-gray-100">
+                <span class="text-xs text-gray-400 font-medium block">Residential Address</span>
+                <span class="font-semibold text-gray-700">{{ p.address || 'Campus Hostels, University Campus Road' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    }
+  }
+
+</div>
+
+<!-- FULL VIEW STUDENT DIGITAL ID QR MODAL WITH DARK BLUE GRADIENT -->
+@if (showQrModal() && studentProfile(); as p) {
+  <div class="fixed inset-0 bg-black/80 backdrop-blur-xs flex items-center justify-center z-50 p-4 overflow-y-auto" (click)="closeQrModal()">
+    <div class="bg-white rounded shadow-2xl max-w-md w-full overflow-hidden border border-gray-100 animate-in fade-in zoom-in duration-200" (click)="$event.stopPropagation()">
+      <!-- Modal Header -->
+      <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 text-white p-6 flex items-center justify-between">
+        <div>
+          <div class="text-[10px] uppercase font-mono font-bold tracking-widest text-blue-300">OFFICIAL STUDENT CAMPUS ID</div>
+          <h3 class="text-xl font-extrabold">{{ p.name }}</h3>
+        </div>
+        <button (click)="closeQrModal()" class="text-white/80 hover:text-white text-3xl font-bold">&times;</button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 flex flex-col items-center text-center space-y-4">
+        <span class="px-4 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-300">
+          {{ p.academicStatus || 'Active Student' }}
+        </span>
+
+        <!-- ENLARGED STANDARD QR CODE -->
+        <div class="bg-gradient-to-br from-slate-50 via-white to-blue-50/50 p-5 rounded border border-blue-200 shadow-lg flex flex-col items-center justify-center mx-auto">
+          <div class="w-48 h-48 bg-white p-3 border-2 border-gray-900 rounded flex items-center justify-center shadow-inner">
+            <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=UNIVERSITY-STUDENT|' + p.id + '|' + p.rrn + '|' + p.name"
+                 alt="Student QR Code"
+                 class="w-full h-full object-contain" />
+          </div>
+          <div class="text-xs font-mono font-extrabold text-slate-900 mt-2.5 tracking-widest uppercase">SCAN AT CAMPUS GATE & SERVICES</div>
+        </div>
+
+        <!-- Student Summary Details -->
+        <div class="w-full bg-gray-50 p-4 rounded border border-gray-200 text-left text-xs space-y-2">
+          <div class="flex justify-between">
+            <span class="text-gray-400">Register Number (RRN):</span>
+            <span class="font-mono font-bold text-accent text-sm">{{ p.rrn }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Department:</span>
+            <span class="font-bold text-gray-800">{{ p.department }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Program Degree:</span>
+            <span class="font-bold text-gray-800">{{ p.degreeType }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Current Semester:</span>
+            <span class="font-bold text-emerald-600">Semester {{ p.semester }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Blood Group:</span>
+            <span class="font-bold text-red-500">{{ p.bloodGroup || 'O+' }}</span>
+          </div>
+        </div>
+
+        <button (click)="closeQrModal()"
+                class="w-full py-3 bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-950 text-white font-extrabold text-sm rounded hover:opacity-95 transition-opacity shadow-md">
+          Close ID View
+        </button>
+      </div>
+    </div>
+  </div>
+}

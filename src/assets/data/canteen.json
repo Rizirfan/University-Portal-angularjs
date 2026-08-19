@@ -1,0 +1,42 @@
+[
+  {
+    "id": "CAT1",
+    "category": "Main Course",
+    "items": [
+      { "id": "F001", "name": "Rice Bowl with Chicken Curry", "price": 80, "available": true, "veg": false },
+      { "id": "F002", "name": "Paneer Butter Masala with Naan", "price": 90, "available": true, "veg": true },
+      { "id": "F003", "name": "Fish Curry with Steamed Rice", "price": 100, "available": false, "veg": false },
+      { "id": "F004", "name": "Veg Biryani", "price": 70, "available": true, "veg": true }
+    ]
+  },
+  {
+    "id": "CAT2",
+    "category": "Snacks",
+    "items": [
+      { "id": "F005", "name": "Samosa (2 pcs)", "price": 20, "available": true, "veg": true },
+      { "id": "F006", "name": "Veg Sandwich", "price": 30, "available": true, "veg": true },
+      { "id": "F007", "name": "Chicken Roll", "price": 45, "available": true, "veg": false },
+      { "id": "F008", "name": "French Fries", "price": 40, "available": false, "veg": true }
+    ]
+  },
+  {
+    "id": "CAT3",
+    "category": "Beverages",
+    "items": [
+      { "id": "F009", "name": "Masala Chai", "price": 15, "available": true, "veg": true },
+      { "id": "F010", "name": "Cold Coffee", "price": 35, "available": true, "veg": true },
+      { "id": "F011", "name": "Fresh Lime Soda", "price": 20, "available": true, "veg": true },
+      { "id": "F012", "name": "Mango Lassi", "price": 30, "available": true, "veg": true }
+    ]
+  },
+  {
+    "id": "CAT4",
+    "category": "Desserts",
+    "items": [
+      { "id": "F013", "name": "Gulab Jamun (2 pcs)", "price": 25, "available": true, "veg": true },
+      { "id": "F014", "name": "Chocolate Brownie", "price": 40, "available": true, "veg": true },
+      { "id": "F015", "name": "Ice Cream Cup", "price": 30, "available": true, "veg": true },
+      { "id": "F016", "name": "Fruit Salad", "price": 35, "available": false, "veg": true }
+    ]
+  }
+]

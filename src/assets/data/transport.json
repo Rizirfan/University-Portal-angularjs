@@ -1,0 +1,46 @@
+[
+  {
+    "id": "BUS001",
+    "busNumber": "KA-01-1234",
+    "route": "City Center → University",
+    "pickupPoints": ["City Center", "Main Road Junction", "Park Street", "University Gate"],
+    "timings": ["7:00 AM", "8:00 AM", "9:00 AM"],
+    "returnTimings": ["4:00 PM", "5:00 PM", "6:00 PM"],
+    "totalSeats": 40,
+    "availableSeats": 12,
+    "farePerMonth": 2500
+  },
+  {
+    "id": "BUS002",
+    "busNumber": "KA-01-5678",
+    "route": "Railway Station → University",
+    "pickupPoints": ["Railway Station", "Bus Stand", "Market Road", "University Gate"],
+    "timings": ["6:30 AM", "7:30 AM", "8:30 AM"],
+    "returnTimings": ["3:30 PM", "4:30 PM", "5:30 PM"],
+    "totalSeats": 45,
+    "availableSeats": 20,
+    "farePerMonth": 3000
+  },
+  {
+    "id": "BUS003",
+    "busNumber": "KA-01-9012",
+    "route": "North Town → University",
+    "pickupPoints": ["North Town", "Hill Road", "Lake View", "University Gate"],
+    "timings": ["7:15 AM", "8:15 AM"],
+    "returnTimings": ["4:15 PM", "5:15 PM"],
+    "totalSeats": 35,
+    "availableSeats": 5,
+    "farePerMonth": 2800
+  },
+  {
+    "id": "BUS004",
+    "busNumber": "KA-01-3456",
+    "route": "South Campus → University",
+    "pickupPoints": ["South Campus Gate", "Medical Center", "Shopping Complex", "University Gate"],
+    "timings": ["7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM"],
+    "returnTimings": ["3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM"],
+    "totalSeats": 50,
+    "availableSeats": 30,
+    "farePerMonth": 2000
+  }
+]
